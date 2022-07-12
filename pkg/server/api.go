@@ -49,7 +49,7 @@ func New(repo task.TaskRepository) Server {
 
 	r := mux.NewRouter() //creamos una instancia de router
 
-	r.Handle("/swagger.yml", http.FileServer(http.Dir("./")))
+	//r.Handle("/swagger.yml", http.FileServer(http.Dir("./")))
 
 	// documentation for share
 	opts1 := middleware.RedocOpts{Path: "api-doc", SpecURL: "/swagger.yml"}
@@ -93,9 +93,9 @@ func HomeHandler(w http.ResponseWriter, r *http.Request) {
 // Push the given resource to the client.
 func push(w http.ResponseWriter, resource string) {
 	pusher, ok := w.(http.Pusher)
-	var err error
+
 	if ok {
-		err = pusher.Push(resource, nil)
+		err := pusher.Push(resource, nil)
 		log.Fatal(err)
 	}
 }
@@ -143,7 +143,8 @@ func (a *api) removeTask(w http.ResponseWriter, r *http.Request) { //para borrar
 	w.WriteHeader(http.StatusNoContent)
 }
 
-func (a *api) modifyTask(w http.ResponseWriter, r *http.Request) { //para marcar una tarea como realizada
+//modifyTask sirve para marcar una tarea como realizada
+func (a *api) modifyTask(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 

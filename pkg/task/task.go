@@ -3,9 +3,9 @@ package task
 // Type that defines a task
 // Se incluyen tags para tranformar el struct desde json o hacia json
 type Task struct {
-	ID          int    `json:"ID"`
-	Name        string `json:"name,omitempty"`
-	Check_valid bool   `json:"check_valid,omitempty"`
+	ID         int    `json:"ID"`
+	Name       string `json:"name,omitempty"`
+	CheckValid bool   `json:"check_valid,omitempty"`
 }
 
 // Defines the interface to interact with the tasks

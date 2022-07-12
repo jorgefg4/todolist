@@ -41,12 +41,8 @@ func (handler *PostgresHandler) GetConnection() error {
 		return err
 	}
 
-	err = handler.DB.Ping()
-	if err != nil {
-		return err
-	}
+	return handler.DB.Ping()
 
-	return err
 }
 
 // Retrieves all tasks from the database and returns a map with the tasks formatted
@@ -65,9 +61,9 @@ func (handler *PostgresHandler) GetAllTasks() (map[int]*task.Task, error) {
 		check_valid := databaseTask.CheckValid
 
 		newTask := task.Task{
-			ID:          id,
-			Name:        name,
-			Check_valid: check_valid,
+			ID:         id,
+			Name:       name,
+			CheckValid: check_valid,
 		}
 
 		tasksMap[id] = &newTask
@@ -82,14 +78,16 @@ func (handler *PostgresHandler) CreateNewTask(name string) error {
 
 	newTask.Name = name
 
-	err := newTask.Insert(handler.ctx, handler.DB, boil.Infer())
+	return newTask.Insert(handler.ctx, handler.DB, boil.Infer())
 
-	return err
 }
 
 // Delete a given task from the database
 func (handler *PostgresHandler) DeleteTask(id int) error {
 	task, err := models.FindTask(handler.ctx, handler.DB, id)
+	if err != nil {
+		return err
+	}
 
 	_, err = task.Delete(handler.ctx, handler.DB)
 
@@ -97,8 +95,11 @@ func (handler *PostgresHandler) DeleteTask(id int) error {
 }
 
 // Modifies a given task from the database
-func (handler *PostgresHandler) ModifyTask(id int) error {
+func (handler *PostgresHandler) CheckTask(id int) error {
 	task, err := models.FindTask(handler.ctx, handler.DB, id)
+	if err != nil {
+		return err
+	}
 
 	task.CheckValid = true
 

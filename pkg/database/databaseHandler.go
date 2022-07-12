@@ -19,5 +19,5 @@ type DatabaseHandler interface {
 	DeleteTask(id int) error
 
 	// Modifies a given task from a given type of database
-	ModifyTask(id int) error
+	CheckTask(id int) error
 }

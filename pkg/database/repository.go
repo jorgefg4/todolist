@@ -72,7 +72,7 @@ func (r *taskRepository) UpdateTask(ID int) (int, error) {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
 
-	err := r.db.ModifyTask(ID)
+	err := r.db.CheckTask(ID)
 	if err != nil {
 		return 1, err
 	} else {
