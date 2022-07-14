@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/jorgefg4/todolist/pkg/database"
 
@@ -14,25 +15,32 @@ import (
 	"github.com/rs/cors"
 )
 
+// parseURI build the connection string to the postgres database
+func parseURI() string {
+	return "postgresql://" + os.Getenv("USER_DB") + ":" + os.Getenv("PASSWORD_DB") +
+		"@" + os.Getenv("HOST_DB") + ":" + os.Getenv("PORT_DB") + "/" +
+		os.Getenv("NAME_DB") + "?sslmode=disable"
+}
+
 func main() {
-	// Declaramos de variables necesarias
+	// Declaration of required variables
 	var db *sql.DB
 	var ctx context.Context = context.Background()
 
-	//Llamamos a la capa Service para crear el Server
+	// Call to the Service layer to create the Server
 	ph := database.NewPostgres(db, ctx)
 	svc := service.NewService(ph)
-	s, err := svc.NewServer()
+	s, err := svc.NewServer(parseURI())
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	//Cabeceras CORS:
+	// CORS headers:
 	handler := cors.New(cors.Options{AllowedMethods: []string{"GET", "POST", "DELETE", "PUT", "OPTIONS"}}).Handler(s.Router())
 
-	//Se pone a escuchar en el puerto TCP 8000 de localhost y llama al handler
+	// It listens on TCP port 8000 of localhost and calls the handler
 	log.Fatal(http.ListenAndServe(":8000", handler))
 
-	// Si nada falla, indica que el server esta en funcionamiento
+	// If nothing fails, it indicates that the server is up and running
 	fmt.Printf("Server running\n")
 }

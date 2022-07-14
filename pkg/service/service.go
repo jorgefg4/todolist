@@ -20,8 +20,8 @@ func NewService(DB database.DatabaseHandler) *Service {
 }
 
 // Returns a new server that connects to a database
-func (svc *Service) NewServer() (server.Server, error) {
-	err := svc.DB.GetConnection()
+func (svc *Service) NewServer(conString string) (server.Server, error) {
+	err := svc.DB.GetConnection(conString)
 	if err != nil {
 		return nil, err
 	}

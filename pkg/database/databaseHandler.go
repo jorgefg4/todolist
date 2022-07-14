@@ -7,7 +7,7 @@ import (
 // Interface for accesses to a database
 type DatabaseHandler interface {
 	// Stablishes connection with a given type of database
-	GetConnection() error
+	GetConnection(conString string) error
 
 	// Retrieves all tasks from a given type of database
 	GetAllTasks() (map[int]*task.Task, error)

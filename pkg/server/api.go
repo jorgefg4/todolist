@@ -18,8 +18,6 @@ import (
 // Templates
 var navigationBarHTML string
 var homepageTpl *template.Template
-var secondViewTpl *template.Template
-var thirdViewTpl *template.Template
 
 //Variable para asignar IDs a las tasks
 var numID = 0
@@ -29,9 +27,6 @@ func init() {
 
 	homepageHTML := assets.MustAssetString("web/templates/index.html")
 	homepageTpl = template.Must(template.New("homepage_view").Parse(homepageHTML))
-
-	secondViewHTML := assets.MustAssetString("web/templates/second_view.html")
-	secondViewTpl = template.Must(template.New("second_view").Parse(secondViewHTML))
 }
 
 type api struct {

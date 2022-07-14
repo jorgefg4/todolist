@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"os"
 	"testing"
 
 	task "github.com/jorgefg4/todolist/pkg/task"
@@ -17,7 +18,12 @@ func TestCreateTask(t *testing.T) {
 
 	postgreshandler := NewPostgres(db, ctx)
 
-	err := postgreshandler.GetConnection()
+	// String to connect to database
+	var conString string = "postgresql://" + os.Getenv("USER_DB") + ":" + os.Getenv("PASSWORD_DB") +
+		"@" + os.Getenv("HOST_DB") + ":" + os.Getenv("PORT_DB") + "/" +
+		os.Getenv("NAME_DB") + "?sslmode=disable"
+
+	err := postgreshandler.GetConnection(conString)
 	if err != nil {
 		fmt.Println(err)
 		t.Fatalf("error")

@@ -3,7 +3,6 @@ package database
 import (
 	"context"
 	"database/sql"
-	"os"
 
 	task "github.com/jorgefg4/todolist/pkg/task"
 	"github.com/volatiletech/sqlboiler/v4/boil"
@@ -20,10 +19,10 @@ type PostgresHandler struct {
 	ctx context.Context
 }
 
-// String to connect to database
-var conString string = "postgresql://" + os.Getenv("USER_DB") + ":" + os.Getenv("PASSWORD_DB") +
-	"@" + os.Getenv("HOST_DB") + ":" + os.Getenv("PORT_DB") + "/" +
-	os.Getenv("NAME_DB") + "?sslmode=disable"
+// // String to connect to database
+// var conString string = "postgresql://" + os.Getenv("USER_DB") + ":" + os.Getenv("PASSWORD_DB") +
+// 	"@" + os.Getenv("HOST_DB") + ":" + os.Getenv("PORT_DB") + "/" +
+// 	os.Getenv("NAME_DB") + "?sslmode=disable"
 
 // Rerturns a new PostgresHandler element
 func NewPostgres(db *sql.DB, ctx context.Context) *PostgresHandler {
@@ -34,7 +33,7 @@ func NewPostgres(db *sql.DB, ctx context.Context) *PostgresHandler {
 }
 
 // Stablish a connection with the database
-func (handler *PostgresHandler) GetConnection() error {
+func (handler *PostgresHandler) GetConnection(conString string) error {
 	var err error
 	handler.DB, err = sql.Open("postgres", conString)
 	if err != nil {

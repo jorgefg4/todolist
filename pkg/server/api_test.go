@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 
 	"github.com/jorgefg4/todolist/pkg/database"
@@ -21,7 +22,12 @@ func TestFetchTasks(t *testing.T) {
 
 	h := database.PostgresHandler{}
 
-	err = h.GetConnection()
+	// String to connect to database
+	var conString string = "postgresql://" + os.Getenv("USER_DB") + ":" + os.Getenv("PASSWORD_DB") +
+		"@" + os.Getenv("HOST_DB") + ":" + os.Getenv("PORT_DB") + "/" +
+		os.Getenv("NAME_DB") + "?sslmode=disable"
+
+	err = h.GetConnection(conString)
 	if err != nil {
 		fmt.Println(err)
 		t.Fatalf("error")

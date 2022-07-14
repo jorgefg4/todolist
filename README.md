@@ -68,7 +68,7 @@ This specification follows the Swagger specification. It is written in YAML and 
 You can access the API documentation in the path `localhost:8000/api-doc`
 ### Testing
 ***
-For the execution of the API tests, it will be possible to execute `make test` to execute all the tests.
+For the execution of the API tests, it will be possible to execute `make test` to execute all the tests after launching the app with `make run`
 
 
 
