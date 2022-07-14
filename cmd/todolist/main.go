@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -42,5 +41,5 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8000", handler))
 
 	// If nothing fails, it indicates that the server is up and running
-	fmt.Printf("Server running\n")
+	log.Println("Server running")
 }

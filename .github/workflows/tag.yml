@@ -2,7 +2,7 @@ name: Bump version
 on:
   push:
     branches:
-      - raul/docker/actions
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest

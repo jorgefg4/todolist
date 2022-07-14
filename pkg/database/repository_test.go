@@ -11,7 +11,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-// Tests the creation of a new task
+// TestCreateTask tests the creation of a new task
 func TestCreateTask(t *testing.T) {
 	var db *sql.DB
 	var ctx context.Context = context.Background()

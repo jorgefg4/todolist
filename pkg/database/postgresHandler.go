@@ -19,12 +19,7 @@ type PostgresHandler struct {
 	ctx context.Context
 }
 
-// // String to connect to database
-// var conString string = "postgresql://" + os.Getenv("USER_DB") + ":" + os.Getenv("PASSWORD_DB") +
-// 	"@" + os.Getenv("HOST_DB") + ":" + os.Getenv("PORT_DB") + "/" +
-// 	os.Getenv("NAME_DB") + "?sslmode=disable"
-
-// Rerturns a new PostgresHandler element
+// NewPostgres returns a new PostgresHandler element
 func NewPostgres(db *sql.DB, ctx context.Context) *PostgresHandler {
 	return &PostgresHandler{
 		DB:  db,
@@ -32,7 +27,7 @@ func NewPostgres(db *sql.DB, ctx context.Context) *PostgresHandler {
 	}
 }
 
-// Stablish a connection with the database
+// GetConnection stablish a connection with the database
 func (handler *PostgresHandler) GetConnection(conString string) error {
 	var err error
 	handler.DB, err = sql.Open("postgres", conString)
@@ -40,16 +35,11 @@ func (handler *PostgresHandler) GetConnection(conString string) error {
 		return err
 	}
 
-	err = handler.DB.Ping()
-	if err != nil {
-		return err
-	}
-
-	return err
+	return handler.DB.Ping()
 }
 
-// Retrieves all tasks from the database and returns a map with the tasks formatted
-// for the application to use (type of task,Task)
+// GetAllTasks retrieves all tasks from the database and returns a map with the tasks formatted
+// for the application to use (type of Task)
 func (handler *PostgresHandler) GetAllTasks() (map[int]*task.Task, error) {
 	tasks, err := models.Tasks().All(handler.ctx, handler.DB)
 	if err != nil {
@@ -64,40 +54,44 @@ func (handler *PostgresHandler) GetAllTasks() (map[int]*task.Task, error) {
 		check_valid := databaseTask.CheckValid
 
 		newTask := task.Task{
-			ID:          id,
-			Name:        name,
-			Check_valid: check_valid,
+			ID:         id,
+			Name:       name,
+			CheckValid: check_valid,
 		}
 
 		tasksMap[id] = &newTask
 	}
 
-	return tasksMap, err
+	return tasksMap, nil
 }
 
-// Create a new task in the database
+// CreateNewTask creates a new task in the database
 func (handler *PostgresHandler) CreateNewTask(name string) error {
 	var newTask models.Task
 
 	newTask.Name = name
 
-	err := newTask.Insert(handler.ctx, handler.DB, boil.Infer())
-
-	return err
+	return newTask.Insert(handler.ctx, handler.DB, boil.Infer())
 }
 
-// Delete a given task from the database
+// DeleteTask deletes a given task from the database
 func (handler *PostgresHandler) DeleteTask(id int) error {
 	task, err := models.FindTask(handler.ctx, handler.DB, id)
+	if err != nil {
+		return err
+	}
 
 	_, err = task.Delete(handler.ctx, handler.DB)
 
 	return err
 }
 
-// Modifies a given task from the database
-func (handler *PostgresHandler) ModifyTask(id int) error {
+// CheckTask marks a given task as done
+func (handler *PostgresHandler) CheckTask(id int) error {
 	task, err := models.FindTask(handler.ctx, handler.DB, id)
+	if err != nil {
+		return err
+	}
 
 	task.CheckValid = true
 

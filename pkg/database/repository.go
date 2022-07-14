@@ -1,7 +1,6 @@
 package database
 
 import (
-	"fmt"
 	"sync"
 
 	task "github.com/jorgefg4/todolist/pkg/task"
@@ -14,7 +13,7 @@ type taskRepository struct {
 	db    DatabaseHandler
 }
 
-// Returns a new repository initialized with the given tasks and
+// NewTaskRepository returns a new repository initialized with the given tasks and
 // database handler
 func NewTaskRepository(tasks map[int]*task.Task, DB DatabaseHandler) task.TaskRepository {
 	if tasks == nil {
@@ -27,17 +26,14 @@ func NewTaskRepository(tasks map[int]*task.Task, DB DatabaseHandler) task.TaskRe
 	}
 }
 
-// Creates a new task using the database handler
+// CreateTask creates a new task using the database handler
 func (r *taskRepository) CreateTask(g *task.Task) error {
-	r.mtx.Lock()
-	defer r.mtx.Unlock()
-	r.db.CreateNewTask(g.Name)
 
-	return nil
+	return r.db.CreateNewTask(g.Name)
 }
 
-// Retrieves the tasks in the database and updates the repository
-// with them
+// FetchTasks retrieves all the tasks in the database and updates
+// the repository with them
 func (r *taskRepository) FetchTasks() ([]*task.Task, error) {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
@@ -46,7 +42,7 @@ func (r *taskRepository) FetchTasks() ([]*task.Task, error) {
 
 	r.tasks = tasks
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
 
 	values := make([]*task.Task, 0, len(r.tasks))
@@ -57,51 +53,14 @@ func (r *taskRepository) FetchTasks() ([]*task.Task, error) {
 	return values, nil
 }
 
-// Deletes a task from the database
+// DeleteTask deletes a task from the database
 func (r *taskRepository) DeleteTask(ID int) error {
-	r.mtx.Lock()
-	defer r.mtx.Unlock()
 
-	r.db.DeleteTask(ID)
-
-	return nil
+	return r.db.DeleteTask(ID)
 }
 
-// Updates the status of a given task
-func (r *taskRepository) UpdateTask(ID int) (int, error) {
-	r.mtx.Lock()
-	defer r.mtx.Unlock()
+// CheckTask marks a given task as done
+func (r *taskRepository) CheckTask(ID int) error {
 
-	err := r.db.ModifyTask(ID)
-	if err != nil {
-		return 1, err
-	} else {
-		return 0, nil
-	}
-}
-
-// Retrieves the status of a given task and updates the
-// repository accordingly
-func (r *taskRepository) FetchTaskByID(ID int) (*task.Task, error) {
-	r.mtx.Lock()
-	defer r.mtx.Unlock()
-
-	for _, v := range r.tasks {
-		if v.ID == ID {
-			return v, nil
-		}
-	}
-
-	return nil, fmt.Errorf("The ID %d doesn't exist", ID)
-}
-
-// Checks for the existance of a given task in the database
-func (r *taskRepository) checkIfExists(ID int) error {
-	for _, v := range r.tasks {
-		if v.ID == ID {
-			return fmt.Errorf("The task %d is already exist", ID)
-		}
-	}
-
-	return nil
+	return r.db.CheckTask(ID)
 }
