@@ -31,7 +31,7 @@ func main() {
 	svc := service.NewService(ph)
 	s, err := svc.NewServer(parseURI())
 	if err != nil {
-		log.Fatal(err)
+		log.Fatal("error in NewServer", err)
 	}
 
 	// CORS headers:
