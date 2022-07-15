@@ -20,7 +20,13 @@ At this time, you have a RESTful API server running at `http://127.0.0.1:8000`. 
 * `PUT /tasks/:id`: mark a task as completed
 * `DELETE /tasks/:id`: deletes a task
 
-The API achieves data persistence using a PostgreSQL implemented database with the SQL-boiler ORM. This database is initialized with a single "tasks" table. This table contains the columns of 'id', 'name' and 'check_valid'.
+The API achieves data persistence using a PostgreSQL implemented database with the SQL-boiler ORM. This database is initialized with a single "tasks" table through the .sql file. This table contains the columns of 'id', 'name' and 'check_valid'.
+
+Golang templates have been used for the implementation of the web interface.
+
+The api has been dockerized using a docker-compose of two containers: one for the app and one for the postgres database. The environment variables necessary to establish the connection with the database are defined in the docker-compose.
+The database can be managed using the "pgAdmin" software.
+
 ### Technologies
 ***
 A list of technologies used within the project:
@@ -29,6 +35,7 @@ A list of technologies used within the project:
 * [rs/cors](https://github.com/rs/cors)
 * [gorilla/mux](https://"github.com/gorilla/mux)
 * [stretchr/testify](https://github.com/stretchr/testify)
+* [gavv/httpexpect](https://github.com/gavv/httpexpect)
 * [volatiletech/sqlboiler](https://github.com/volatiletech/sqlboiler)
 * [PostgreSQL](https://www.postgresql.org)
 * [Swagger](https://swagger.io)
@@ -68,7 +75,7 @@ This specification follows the Swagger specification. It is written in YAML and 
 You can access the API documentation in the path `localhost:8000/api-doc`
 ### Testing
 ***
-For the execution of the API tests, it will be possible to execute `make test` to execute all the tests after launching the app with `make run`
+For the execution of the API tests, it will be possible to execute `make test` to execute all the tests after launching the app with `make run`.
 
 
 
