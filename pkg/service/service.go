@@ -1,8 +1,6 @@
 package service
 
 import (
-	"fmt"
-
 	"github.com/jorgefg4/todolist/pkg/database"
 	"github.com/jorgefg4/todolist/pkg/server"
 )
@@ -12,14 +10,14 @@ type Service struct {
 	DB database.DatabaseHandler
 }
 
-// Returns a new service with the given database handler
+// NewService returns a new service with the given database handler
 func NewService(DB database.DatabaseHandler) *Service {
 	return &Service{
 		DB: DB,
 	}
 }
 
-// Returns a new server that connects to a database
+// NewServer returns a new server that connects to a database
 func (svc *Service) NewServer(conString string) (server.Server, error) {
 	err := svc.DB.GetConnection(conString)
 	if err != nil {
@@ -31,11 +29,7 @@ func (svc *Service) NewServer(conString string) (server.Server, error) {
 		return nil, err
 	}
 
-	for _, task := range tasks {
-		fmt.Println(task.Name)
-	}
-
-	// Llamo al package "server" para crear un nuevo router
+	// Call the "server" package to create a new router
 	repo := database.NewTaskRepository(tasks, svc.DB)
 	s := server.New(repo)
 

@@ -13,7 +13,7 @@ import (
 	"github.com/jorgefg4/todolist/pkg/task"
 )
 
-// Tests the retrieval of the tasks from the database
+// TestFetchTasks tests the retrieval of the tasks from the database
 func TestFetchTasks(t *testing.T) {
 	req, err := http.NewRequest("GET", "/tasks", nil)
 	if err != nil {
@@ -42,7 +42,7 @@ func TestFetchTasks(t *testing.T) {
 	repo := database.NewTaskRepository(tasks, &h)
 	s := New(repo)
 
-	rec := httptest.NewRecorder() // Con el paquete httptest podemos generar el http.ResponseWriter
+	rec := httptest.NewRecorder() // With the httptest packet its possible to generate the http.ResponseWriter
 
 	s.fetchTasks(rec, req)
 

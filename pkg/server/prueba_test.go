@@ -8,13 +8,12 @@ import (
 	"github.com/jorgefg4/todolist/pkg/task"
 )
 
+// TestPrueba tests an example of e2e testing with the go packet httpexpect
 func TestPrueba(t *testing.T) {
 	// handler := api.New()
-
 	// server := httptest.NewServer(handler)
 	// defer server.Close()
 
-	// e := httpexpect.New(t, server.URL)
 	e := httpexpect.New(t, "http://localhost:8000")
 
 	e.GET("/tasks").
@@ -43,5 +42,4 @@ func TestPrueba(t *testing.T) {
 	e.PUT("/tasks/153").
 		Expect().
 		Status(http.StatusBadRequest)
-
 }

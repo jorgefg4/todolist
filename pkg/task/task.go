@@ -1,7 +1,7 @@
 package task
 
 // Type that defines a task
-// Se incluyen tags para tranformar el struct desde json o hacia json
+// Tags are included to transform the struct from json or to json
 type Task struct {
 	ID         int    `json:"ID"`
 	Name       string `json:"name,omitempty"`
@@ -11,6 +11,7 @@ type Task struct {
 // Defines the interface to interact with the tasks
 // Repository provides access to the task storage
 type TaskRepository interface {
+
 	// Creates a new task
 	CreateTask(g *Task) error
 
