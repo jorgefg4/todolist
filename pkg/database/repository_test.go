@@ -38,13 +38,21 @@ func TestCreateTask(t *testing.T) {
 	repo := NewTaskRepository(tasks, postgreshandler)
 
 	t1 := task.Task{ID: 1, Name: "tarea de prueba"}
-	repo.CreateTask(&t1)
+	err = repo.CreateTask(&t1)
+	if err != nil {
+		fmt.Println(err)
+		t.Fatalf("error")
+	}
 
 	repo1, _ := repo.FetchTasks()
 	for _, value := range repo1 {
 		if value.Name == "tarea de prueba" {
 			assert.Equal(t, value.Name, t1.Name, "The two tasks should be the same.")
-			repo.DeleteTask(value.ID) //tras el test se borra la tarea de prueba para evitar su persistencia
+			err = repo.DeleteTask(value.ID) // after the test the task is deleted to avoid its persistence
+			if err != nil {
+				fmt.Println(err)
+				t.Fatalf("error")
+			}
 		}
 	}
 

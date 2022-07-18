@@ -98,7 +98,10 @@ func render(w http.ResponseWriter, r *http.Request, tpl *template.Template, name
 		fmt.Printf("\nRender Error: %v\n", err)
 		return
 	}
-	w.Write(buf.Bytes())
+	_, err := w.Write(buf.Bytes())
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 ///////// Handlers: /////////////
@@ -108,7 +111,10 @@ func (a *api) fetchTasks(w http.ResponseWriter, r *http.Request) {
 	tasks, _ := a.repository.FetchTasks()
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(tasks)
+	err := json.NewEncoder(w).Encode(tasks)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // addTask adds a new task
@@ -116,17 +122,26 @@ func (a *api) addTask(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
 	var t task.Task
-	decoder.Decode(&t)
+	err := decoder.Decode(&t)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	w.Header().Set("Content-Type", "application/json")
 
 	numID++ //first the ID is incremented
 	t.ID = numID
-	a.repository.CreateTask(&t)
+	err = a.repository.CreateTask(&t)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	w.WriteHeader(http.StatusCreated)
 
-	json.NewEncoder(w).Encode(numID) //the ID of the task is sent as a response
+	err = json.NewEncoder(w).Encode(numID) //the ID of the task is sent as a response
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 // removeTask removes a existing task
@@ -134,7 +149,11 @@ func (a *api) removeTask(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, _ := strconv.Atoi(vars["ID"]) //string to int ID conversion
 
-	a.repository.DeleteTask(id)
+	err := a.repository.DeleteTask(id)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusNoContent)
 }
